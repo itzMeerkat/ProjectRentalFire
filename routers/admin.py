@@ -1,4 +1,3 @@
-import routers.infra.databaseapi as db
 from fastapi import APIRouter
 
 router = APIRouter()

@@ -1,21 +1,27 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class ActionReserve(BaseModel):
+    start_time: int
+    category_id: int
+    amount: int
 
+class ActionReserveComplete(BaseModel):
+    uid: int
+    end_time: int
+    status: int
 
-class TokenData(BaseModel):
-    username: str = None
-    scopes: List[str] = []
+class ActionRecord(ActionReserve, ActionReserveComplete):
+    pass
 
+class UserProfile(BaseModel):
+    email: str
+    credit_score: int
 
-class User(BaseModel):
-    username: str
-    email: str = None
-    scopes: List[str] = []
+class ActivityHistory(BaseModel):
+    history: List[ActionRecord]
 
-
-class UserFull(User):
-    hashed_password: str
+class RequestResponse(BaseModel):
+    def __init__(self, status):
+        self.status = status
+    status: int
