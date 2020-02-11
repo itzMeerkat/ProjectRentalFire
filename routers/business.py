@@ -34,11 +34,11 @@ async def read_system_status(uid = Depends(is_valid_token)):
 def checkInventory(r):
     return True
 
-@router.post("/reserve", response_model=RequestResponse)
+@router.post("/reserve")
 async def reserve(reservation: ActionReserve, uid = Depends(is_valid_token)):
     if checkInventory(reservation):
-        return RequestResponse(1)
-    return RequestResponse(0)
+        return "SUCCESS!"
+    return "FAIL!"
 
 
 

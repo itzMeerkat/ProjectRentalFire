@@ -21,7 +21,8 @@ class UserProfile(BaseModel):
 class ActivityHistory(BaseModel):
     history: List[ActionRecord]
 
-class RequestResponse(BaseModel):
-    def __init__(self, status):
-        self.status = status
-    status: int
+
+# class RequestResponse(BaseModel):
+#     def __init__(self, status):
+#         self.status = status
+#     status: int
