@@ -1,25 +1,42 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-class ActionReserve(BaseModel):
-    start_time: int
-    category_id: int
-    amount: int
-
-class ActionReserveComplete(BaseModel):
+class ReserveActivity(BaseModel):
     uid: int
-    end_time: int
+    item_name: int
+    item_ids: List[int]
+    amount: int
+    reserve_begin_time: int
+    checkin_time: int
+    request_time: int
+    return_time: int
     status: int
+    note: str
 
-class ActionRecord(ActionReserve, ActionReserveComplete):
-    pass
+class ReserveUserRequest(BaseModel):
+    item_name: int
+    amount: int
+    reserve_begin_time: int
+
+class ReserveUserCancel(BaseModel):
+    reason: str
+
+class ReserveFrontdeskCheckin(BaseModel):
+    item_ids: List[int]
+    checkin_time: int
+
+class ReserveFrontdeskReturn(BaseModel):
+    return_time: int
+    status: int
+    note: str
+
 
 class UserProfile(BaseModel):
     email: str
     credit_score: int
 
 class ActivityHistory(BaseModel):
-    history: List[ActionRecord]
+    history: List[ReserveActivity]
 
 
 # class RequestResponse(BaseModel):
