@@ -2,10 +2,11 @@ from fastapi import APIRouter
 from fastapi import Depends
 
 #import routers.infra.databaseapi as db
-from routers.infra.data_schema import *
+from routers.infra.data_schema import ReserveUserRequest
 
 from routers.infra.firebaseapi import is_valid_token
-
+import routers.infra.firebaseapi as fb
+import routers.infra.utils as utils
 
 router = APIRouter()
 
@@ -31,14 +32,15 @@ async def read_system_status(uid = Depends(is_valid_token)):
     return {"you are": uid}
 
 
-def checkInventory(r):
-    return True
+@router.post("/reservation/create")
+async def create_reservation(reservation: ReserveUserRequest, uid = Depends(is_valid_token)):
+    aid = fb.reserve_item(uid, reservation.category, reservation.amount, utils.get_current_millisec())
+    if not aid is None:
+        return {"status": 200, "AID": aid}
+    return {"status": 404}
 
-@router.post("/reserve")
-async def reserve(reservation: ActionReserve, uid = Depends(is_valid_token)):
-    if checkInventory(reservation):
-        return "SUCCESS!"
-    return "FAIL!"
+@router.post("/reservation/verify")
+async def verify_reservation(uid=Depends(is_valid_token)):
 
 
 

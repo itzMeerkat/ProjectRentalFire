@@ -3,6 +3,8 @@ from firebase_admin import firestore
 from firebase_admin import auth
 from routers.infra.exceptions import make_401_exception
 
+
+
 app = firebase_admin.initialize_app()
 db = firestore.client()
 
@@ -32,7 +34,7 @@ def reserve_item(uid, category, amount, start_time):
     transaction = db.transaction()
     equipment_ref = db.collection(u'equipemtns').document(category)
 
-    result = update_in_transaction(transaction, equipment_ref, amonut)
+    result = reserve_if_avaliable(transaction, equipment_ref, amount)
     if result:
         activity = {'uid':uid, 'equip_category': category, 'amount':amount, 'start_time': start_time}
         doc_ref = db.collection('activities').add(activity)

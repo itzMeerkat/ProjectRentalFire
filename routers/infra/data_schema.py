@@ -14,14 +14,15 @@ class ReserveActivity(BaseModel):
     note: str
 
 class ReserveUserRequest(BaseModel):
-    item_name: int
+    item_name: str
     amount: int
     reserve_begin_time: int
 
 class ReserveUserCancel(BaseModel):
     reason: str
 
-class ReserveFrontdeskCheckin(BaseModel):
+class ReserveFrontdeskVerify(BaseModel):
+    success: int
     item_ids: List[int]
     checkin_time: int
 
