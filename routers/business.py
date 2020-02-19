@@ -4,8 +4,8 @@ from fastapi import Depends
 #import routers.infra.databaseapi as db
 from routers.infra.data_schema import *
 
-from routers.infra.firebaseapi import is_valid_token
-
+from routers.infra.firebaseapi import is_valid_token, reserve_item, update_db
+import routers.infra.utils as utils
 
 router = APIRouter()
 
@@ -31,14 +31,31 @@ async def read_system_status(uid = Depends(is_valid_token)):
     return {"you are": uid}
 
 
-def checkInventory(r):
-    return True
+@router.post("/reservation/create")
+async def create_reservation(reservation: ReserveUserRequest, uid = Depends(is_valid_token)):
+    res = reserve_item(uid, reservation.item_name, reservation.amount, utils.get_current_milli())
+    return res
 
-@router.post("/reserve")
-async def reserve(reservation: ActionReserve, uid = Depends(is_valid_token)):
-    if checkInventory(reservation):
-        return "SUCCESS!"
-    return "FAIL!"
+@router.post("/reservation/cancel")
+async def cancel_reservation(request: ReserveUserCancel):
+    request.status = 'canceled'
+    r = update_db('activities', request.aid, request)
+    print(r)
+    return r
+
+@router.post("/reservation/checkout")
+def checkout_equip(request: ReserveFrontdeskCheckout):
+    request.status = 'checked out'
+    r = update_db('activities', request.aid, request)
+    print(r)
+    return r
+
+@router.post("/reservation/return")
+def return_equip(request: ReserveFrontdeskReturn):
+    request.status = 'closed'
+    r = update_db('activities', request.aid, request)
+    print(r)
+    return r
 
 
 

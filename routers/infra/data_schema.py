@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
+# Status: Open, Closed, Canceled, Failed
 class ReserveActivity(BaseModel):
+    aid: str
     uid: int
     item_name: int
     item_ids: List[int]
@@ -10,7 +12,7 @@ class ReserveActivity(BaseModel):
     checkin_time: int
     request_time: int
     return_time: int
-    status: int
+    status: str
     note: str
 
 class ReserveUserRequest(BaseModel):
@@ -19,13 +21,16 @@ class ReserveUserRequest(BaseModel):
     reserve_begin_time: int
 
 class ReserveUserCancel(BaseModel):
+    aid: str
     reason: str
 
-class ReserveFrontdeskCheckin(BaseModel):
+class ReserveFrontdeskCheckout(BaseModel):
+    aid: str
     item_ids: List[int]
     checkin_time: int
 
 class ReserveFrontdeskReturn(BaseModel):
+    aid: str
     return_time: int
     status: int
     note: str

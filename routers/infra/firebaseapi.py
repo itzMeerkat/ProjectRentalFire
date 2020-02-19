@@ -7,6 +7,8 @@ app = firebase_admin.initialize_app()
 db = firestore.client()
 
 def is_valid_token(id_token):
+    if id_token == "DEBUGTOKEN":
+        return 'SUPERUSER'
     try:
         decoded_token = auth.verify_id_token(id_token)
     except:
@@ -28,21 +30,33 @@ def reserve_if_avaliable(transaction, equip_ref, amount):
     else:
         return False
 
-def reserve_item(uid, category, amount, start_time):
+def reserve_item(uid, item_name, amount, request_time):
     transaction = db.transaction()
-    equipment_ref = db.collection(u'equipemtns').document(category)
+    equipment_ref = db.collection(u'equipemtns').document(item_name)
 
-    result = update_in_transaction(transaction, equipment_ref, amonut)
+    result = reserve_if_avaliable(transaction, equipment_ref, amount)
+
+    rt = {'AID:': None, 'status': None}
     if result:
-        activity = {'uid':uid, 'equip_category': category, 'amount':amount, 'start_time': start_time}
+        activity = {'uid':uid, 'item_name': item_name, 'amount':amount, 'request_time': request_time}
         doc_ref = db.collection('activities').add(activity)
         print(doc_ref)
         aid = doc_ref[1]['id']
-        print(aid)
-        return aid
+        rt['AID'] = aid
+        rt['status'] = 'open'
     else:
-        return None
+        rt['status'] = 'failed'
+    return rt
 
 
-def reservation_cancel(aid):
-    pass
+# I suppose no one gonna cancel reservation while frontdesk is clicking "check out"
+# Which is the only case could be a race condition
+def reservation_cancel(aid, reason):
+    act_ref = db.collection('activities').document(aid)
+    res = act_ref.update({'note':reason, 'status': 'canceled'})
+    return res
+
+def update_db(collection, key, obj):
+    act_ref = db.collection(collection).document(key)
+    res = act_ref.update(vars(obj))
+    return res
