@@ -16,7 +16,7 @@ class ReserveActivity(BaseModel):
     note: str
 
 class ReserveUserRequest(BaseModel):
-    item_name: int
+    item_name: str
     amount: int
     reserve_begin_time: int
 

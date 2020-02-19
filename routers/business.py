@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 
 #import routers.infra.databaseapi as db
-from routers.infra.data_schema import *
+from routers.infra.data_schema import ReserveUserRequest
 
 from routers.infra.firebaseapi import is_valid_token, reserve_item, update_db
 import routers.infra.utils as utils
