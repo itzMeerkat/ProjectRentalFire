@@ -1,9 +1,7 @@
 import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import auth
-from routers.infra.exceptions import make_401_exception
-
-
+from modules.utils.exceptions import make_401_exception
 
 app = firebase_admin.initialize_app()
 db = firestore.client()
