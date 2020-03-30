@@ -6,6 +6,11 @@ from modules.utils.exceptions import make_401_exception
 app = firebase_admin.initialize_app()
 db = firestore.client()
 
+def get_all_reservations():
+    ds = db.collection('reservation').stream()
+    r = [i.to_dict() for i in ds]
+    return r
+
 def is_valid_token(id_token):
     if id_token == "DEBUGTOKEN":
         return 'SUPERUSER'
@@ -32,8 +37,7 @@ def reserve_if_avaliable(transaction, equip_ref, amount):
 
 def reserve_item(uid, item_name, amount, request_time):
     transaction = db.transaction()
-    equipment_ref = db.collection(u'equipemtns').document(item_name)
-
+    equipment_ref = db.collection(u'items').where('name','==',item_name)
     result = reserve_if_avaliable(transaction, equipment_ref, amount)
 
     rt = {'AID:': None, 'status': None}

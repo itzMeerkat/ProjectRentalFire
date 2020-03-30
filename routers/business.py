@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get("/fb")
 async def read_system_status(uid = Depends(is_valid_token)):
-    return {"you are": uid}
+    return {"reservations": db.get_all_reservations()}
 
 
 @router.post("/reservation/create")
