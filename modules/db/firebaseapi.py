@@ -37,15 +37,17 @@ def reserve_if_avaliable(transaction, equip_ref, amount):
 
 def reserve_item(uid, item_name, amount, request_time):
     transaction = db.transaction()
-    equipment_ref = db.collection(u'items').where('name','==',item_name)
+    equipment_ref = db.collection(u'items').document(item_name)
+    
     result = reserve_if_avaliable(transaction, equipment_ref, amount)
 
-    rt = {'AID:': None, 'status': None}
+    rt = {'AID': None, 'status': None}
     if result:
         activity = {'uid':uid, 'item_name': item_name, 'amount':amount, 'request_time': request_time}
         doc_ref = db.collection('activities').add(activity)
-        print(doc_ref)
-        aid = doc_ref[1]['id']
+        doc_ref = doc_ref[1]
+        print(doc_ref.id)
+        aid = doc_ref.id
         rt['AID'] = aid
         rt['status'] = 'open'
     else:
@@ -64,3 +66,31 @@ def update_db(collection, key, obj):
     act_ref = db.collection(collection).document(key)
     res = act_ref.update(vars(obj))
     return res
+
+@firestore.transactional
+def update_in_transaction(transaction, city_ref):
+    snapshot = city_ref.get(transaction=transaction)
+    new_population = snapshot.get(u'population') + 1
+
+    if new_population < 1000000:
+        transaction.update(city_ref, {
+            u'population': new_population
+        })
+        return True
+    else:
+        return False
+
+
+
+
+def trans_test():
+    transaction = db.transaction()
+    city_ref = db.collection(u'cities').document(u'SF')
+    print(type(city_ref))
+    result = update_in_transaction(transaction, city_ref)
+
+
+    if result:
+        print(u'Population updated')
+    else:
+        print(u'Sorry! Population is too big.')
