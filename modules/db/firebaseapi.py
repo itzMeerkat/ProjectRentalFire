@@ -46,7 +46,6 @@ def reserve_item(uid, item_name, amount, request_time):
         activity = {'uid':uid, 'item_name': item_name, 'amount':amount, 'request_time': request_time}
         doc_ref = db.collection('activities').add(activity)
         doc_ref = doc_ref[1]
-        print(doc_ref.id)
         aid = doc_ref.id
         rt['AID'] = aid
         rt['status'] = 'open'
@@ -62,35 +61,9 @@ def reservation_cancel(aid, reason):
     res = act_ref.update({'note':reason, 'status': 'canceled'})
     return res
 
-def update_db(collection, key, obj):
+def update_db(collection, action, actor, key, obj):
     act_ref = db.collection(collection).document(key)
-    res = act_ref.update(vars(obj))
+    _d = vars(obj)
+    _d['ActionAndActor'] = action+":"+actor
+    res = act_ref.update(_d)
     return res
-
-@firestore.transactional
-def update_in_transaction(transaction, city_ref):
-    snapshot = city_ref.get(transaction=transaction)
-    new_population = snapshot.get(u'population') + 1
-
-    if new_population < 1000000:
-        transaction.update(city_ref, {
-            u'population': new_population
-        })
-        return True
-    else:
-        return False
-
-
-
-
-def trans_test():
-    transaction = db.transaction()
-    city_ref = db.collection(u'cities').document(u'SF')
-    print(type(city_ref))
-    result = update_in_transaction(transaction, city_ref)
-
-
-    if result:
-        print(u'Population updated')
-    else:
-        print(u'Sorry! Population is too big.')

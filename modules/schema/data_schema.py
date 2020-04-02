@@ -23,11 +23,13 @@ class ReserveUserRequest(BaseModel):
 class ReserveUserCancel(BaseModel):
     aid: str
     reason: str
+    status: str
 
 class ReserveFrontdeskCheckout(BaseModel):
     aid: str
     item_ids: List[int]
     checkin_time: int
+    status: str
 
 class ReserveFrontdeskReturn(BaseModel):
     aid: str
