@@ -1,0 +1,32 @@
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAgVW5xUMbodf_w3l3YulT2q9qEGP_0EWg",
+    authDomain: "rentalmanager-f94f1.firebaseapp.com",
+    databaseURL: "https://rentalmanager-f94f1.firebaseio.com",
+    projectId: "rentalmanager-f94f1",
+    storageBucket: "rentalmanager-f94f1.appspot.com",
+    messagingSenderId: "107725945138",
+    appId: "1:107725945138:web:e56c9c18bda37dd544bf2b",
+    measurementId: "G-8LRBJP6GGZ"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  email = "testemail@test.com"
+  password = "12345678"
+  firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {console.log("!!!"+idToken)})
+    
+    }).catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode,errorMessage)
+    });
+</script>
