@@ -12,6 +12,7 @@ router = APIRouter()
 
 @router.get("/fb")
 async def read_system_status(uid=Depends(is_valid_token)):
+    db.debug_claim()
     return {"res": uid}
 
 

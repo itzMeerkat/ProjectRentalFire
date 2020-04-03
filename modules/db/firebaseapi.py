@@ -11,6 +11,12 @@ def get_all_reservations():
     r = [i.to_dict() for i in ds]
     return r
 
+def debug_claim():
+    uid = "tDjrJUIfPVcemIiYxyQyRlquK912"
+    auth.set_custom_user_claims(uid, {'admin': True})
+    user = auth.get_user(uid)
+    print(user.custom_claims)
+
 def is_valid_token(id_token):
     if id_token == "DEBUGTOKEN":
         return 'SUPERUSER'
