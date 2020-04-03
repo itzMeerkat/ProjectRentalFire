@@ -24,6 +24,24 @@ def is_valid_token(id_token):
         decoded_token = auth.verify_id_token(id_token)
     except:
         raise make_401_exception("Can't verify token", "Firebase")
-    # print(decoded_token)
     return decoded_token['uid']
 
+class AuthorizationFactory:
+    def __init__(self, obj: str, act: str):
+        self.obj = obj
+        self.act = act
+
+    def __call__(self, token: str):
+        try:
+            decoded_token = auth.verify_id_token(token)
+            uid = decoded_token['uid']
+            user = auth.get_user(uid)
+            role = user.custom_claims.get('role')
+            r = e.enforce(role, self.obj, self.act)
+            if r:
+                return uid
+        except:
+            pass
+
+        raise make_401_exception("Invalid token or not enough permission", "Cowculator")
+        
