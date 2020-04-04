@@ -6,5 +6,6 @@ p, user, activity, cancel
 
 g, admin, frontdesk
 g, frontdesk, user
+g, superuser, admin
 
 p, user, debug, do

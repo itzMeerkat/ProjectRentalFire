@@ -18,10 +18,10 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
 
-  email = "testemail@test.com"
+  email = "testfrontdesk@mail.com"
   password = "12345678"
   firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
-      firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {console.log("!!!"+idToken)})
+      firebase.auth().currentUser.getIdToken(true).then(function (idToken) {console.log(idToken)})
     
     }).catch(function (error) {
         // Handle Errors here.

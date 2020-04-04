@@ -50,3 +50,7 @@ class ActivityHistory(BaseModel):
 #     def __init__(self, status):
 #         self.status = status
 #     status: int
+
+class ChangeUserRole(BaseModel):
+    user_email: str
+    new_role: str

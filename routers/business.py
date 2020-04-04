@@ -12,7 +12,8 @@ router = APIRouter()
 
 @router.get("/fb")
 async def read_system_status(uid=Depends(AuthorizationFactory('debug','do'))):
-    return {"u r": uid}
+    user = db.auth.get_user(uid)
+    return {"u r": user.custom_claims}
 
 
 @router.post("/reservation/create")

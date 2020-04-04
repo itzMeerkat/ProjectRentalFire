@@ -15,14 +15,16 @@ class AuthorizationFactory:
             return 'su'
         try:
             decoded_token = auth.verify_id_token(token)
-            uid = decoded_token['uid']
-            role = 'user'
-            if 'role' in decoded_token:
-                role = decoded_token['role']
-
-            r = e.enforce(role, self.obj, self.act)
-            if not r:
-                raise make_401_exception("Not enough permission", "Cowculator")
         except:
             raise make_401_exception("Invalid token", "Cowculator")
+        uid = decoded_token['uid']
+        role = 'user'
+        if 'role' in decoded_token:
+            role = decoded_token['role']
+        print(role, self.obj, self.act)
+        r = e.enforce(role, self.obj, self.act)
+        print(r)
+        if r == False:
+            raise make_401_exception("Not enough permission", "Cowculator")
+        
         return uid
