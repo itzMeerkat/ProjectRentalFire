@@ -21,9 +21,9 @@ class AuthorizationFactory:
         role = 'user'
         if 'role' in decoded_token:
             role = decoded_token['role']
-        print(role, self.obj, self.act)
+
         r = e.enforce(role, self.obj, self.act)
-        print(r)
+
         if r == False:
             raise make_401_exception("Not enough permission", "Cowculator")
         
