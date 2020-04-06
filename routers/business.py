@@ -24,21 +24,21 @@ async def create_reservation(reservation: ReserveUserRequest,
 
 
 @router.post("/reservation/cancel")
-async def cancel_reservation(request: ReserveUserCancel, uid=Depends(AuthorizationFactory('activity', 'cancel'))):
-    request.status = 'canceled'
-    r = db.update_db('activities', 'reservation_cancel', uid, request.aid, request)
+async def reservation_cancel(request: ReserveUserCancel, uid=Depends(AuthorizationFactory('activity', 'cancel'))):
+    ctnt = {'reason': request.reason, 'status': 'canceled'}
+    r = db.reservation_cancel(uid, request.aid, ctnt)
     return {'r': str(r)}
 
 
 @router.post("/reservation/checkout")
-async def checkout_equip(request: ReserveFrontdeskCheckout, uid=Depends(AuthorizationFactory('activity','checkout'))):
-    request.status = 'checked out'
-    r = db.update_db('activities','equip_checkout',uid, request.aid, request)
+async def reservation_checkout(request: ReserveFrontdeskCheckout, uid=Depends(AuthorizationFactory('activity', 'checkout'))):
+    ctnt = {'item_ids':request.item_ids, 'status': 'checked out'}
+    r = db.reservation_checkout(uid, request.aid, ctnt)
     return {'r': str(r)}
 
 
 @router.post("/reservation/return")
-async def return_equip(request: ReserveFrontdeskReturn, uid=Depends(AuthorizationFactory('activity', 'return'))):
-    request.status = 'closed'
-    r = db.update_db('activities','equip_return',uid, request.aid, request)
+async def reservation_return(request: ReserveFrontdeskReturn, uid=Depends(AuthorizationFactory('activity', 'return'))):
+    ctnt = {'note': request.note, 'status': 'closed'}
+    r = db.reservation_return(uid, request.aid, ctnt)
     return {'r': str(r)}

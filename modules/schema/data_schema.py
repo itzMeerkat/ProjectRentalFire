@@ -18,22 +18,17 @@ class ReserveActivity(BaseModel):
 class ReserveUserRequest(BaseModel):
     item_name: str
     amount: int
-    reserve_begin_time: int
 
 class ReserveUserCancel(BaseModel):
     aid: str
     reason: str
-    status: str
 
 class ReserveFrontdeskCheckout(BaseModel):
     aid: str
     item_ids: List[int]
-    checkin_time: int
-    status: str
 
 class ReserveFrontdeskReturn(BaseModel):
     aid: str
-    return_time: int
     status: int
     note: str
 
