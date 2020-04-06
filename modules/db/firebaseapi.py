@@ -31,7 +31,10 @@ def is_valid_token(id_token):
 @firestore.transactional
 def reserve_if_avaliable(transaction, equip_ref, amount):
     snapshot = equip_ref.get(transaction=transaction)
-    new_amount = snapshot.get(u'amount') - amount
+    old_amount = snapshot.get(u'amount')
+    if old_amount is None:
+        return False
+    new_amount = old_amount - amount
 
     if new_amount >= 0:
         transaction.update(equip_ref, {
@@ -49,7 +52,8 @@ def reserve_item(uid, item_name, amount, request_time):
 
     rt = {'AID': None, 'status': None}
     if result:
-        activity = {'uid':uid, 'item_name': item_name, 'amount':amount, 'request_time': request_time}
+        activity = {'ActionAndActor': ['init_reservation:'+uid], 'item_name': item_name,
+                    'amount': amount, 'request_time': request_time, 'status': 'open'}
         doc_ref = db.collection('activities').add(activity)
         doc_ref = doc_ref[1]
         aid = doc_ref.id
@@ -70,6 +74,13 @@ def reservation_cancel(aid, reason):
 def update_db(collection, action, actor, key, obj):
     act_ref = db.collection(collection).document(key)
     _d = vars(obj)
-    _d['ActionAndActor'] = action+":"+actor
+    _d['ActionAndActor'].append(action+":"+actor)
     res = act_ref.update(_d)
     return res
+
+def get_ongoing_activities():
+    act_gen = db.collection('activities').where('status','==','open').steram()
+    r = []
+    for i in act_gen:
+        r.append(i.to_dict())
+    return r

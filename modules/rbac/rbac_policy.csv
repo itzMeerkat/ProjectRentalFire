@@ -1,6 +1,7 @@
 p, frontdesk, activity, return
 p, frontdesk, activity, checkout
 p, admin, user_claims, modify
+p, admin, activity, getall
 p, user, activity, create
 p, user, activity, cancel
 

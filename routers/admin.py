@@ -11,3 +11,8 @@ router = APIRouter()
 async def set_frontdesk(request: ChangeUserRole, uid=Depends(AuthorizationFactory('user_claims', 'modify'))):
     user_ref = db.auth.get_user_by_email(request.user_email)
     db.auth.set_custom_user_claims(user_ref.uid, {'role': request.new_role})
+    return {'res': True}
+
+@router.post('/getongoing')
+async def get_ongoing_activities(uid=Depends(AuthorizationFactory('activity', 'getall'))):
+    return {'result': db.get_ongoing_activities()}

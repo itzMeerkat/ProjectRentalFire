@@ -1,5 +1,6 @@
 import casbin
 
+from modules.schema.data_schema import IdToken
 from modules.db.firebaseapi import auth
 from modules.utils.exceptions import make_401_exception
 e = casbin.Enforcer("./modules/rbac/rbac_model.conf",

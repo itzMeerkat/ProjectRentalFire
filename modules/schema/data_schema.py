@@ -54,3 +54,6 @@ class ActivityHistory(BaseModel):
 class ChangeUserRole(BaseModel):
     user_email: str
     new_role: str
+
+class IdToken(BaseModel):
+    id_token: str
