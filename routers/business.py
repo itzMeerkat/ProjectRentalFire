@@ -10,11 +10,6 @@ from modules.rbac.rbac import AuthorizationFactory
 
 router = APIRouter()
 
-# @router.get("/fb")
-# async def read_system_status(uid=Depends(AuthorizationFactory('debug','do'))):
-#     user = db.auth.get_user(uid)
-#     return {"u r": user.custom_claims}
-
 
 @router.post("/reservation/create")
 async def create_reservation(reservation: ReserveUserRequest,
