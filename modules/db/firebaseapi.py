@@ -6,6 +6,20 @@ from time import time
 app = firebase_admin.initialize_app()
 db = firestore.client()
 
+def get_all_user():
+    res = []
+    for user in auth.list_users().iterate_all():
+        roles = None
+        if not user.custom_claims is None:
+            roles = list(user.custom_claims.keys())
+        res.append({'uid': user.uid, 
+        'email':user.email, 
+                    'roles': roles}
+    )
+        #print('User: ' + user.uid)
+    print(res)
+    return res
+
 def get_all_reservations():
     ds = db.collection('reservation').stream()
     r = [i.to_dict() for i in ds]
